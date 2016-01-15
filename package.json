@@ -1,0 +1,35 @@
+{
+  "name": "@npmo/npmo-auth-token",
+  "version": "1.0.0",
+  "description": "token based authentication strategy designed for CI systems.",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "standard",
+    "test": "tap --coverage ./test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/npm/npmo-auth-token.git"
+  },
+  "keywords": [
+    "npmo",
+    "auth",
+    "token",
+    "ci"
+  ],
+  "author": "Ben Coe <ben@npmjs.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/npm/npmo-auth-token/issues"
+  },
+  "homepage": "https://github.com/npm/npmo-auth-token#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "standard": "^5.4.1",
+    "tap": "^5.0.1"
+  },
+  "dependencies": {
+    "lodash.assign": "^4.0.0",
+    "redis": "^2.4.2"
+  }
+}
