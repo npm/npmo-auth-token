@@ -1,12 +1,14 @@
 /* global describe it */
 
-// var Session = require('../lib/session')
+var Session = require('../lib/session')
 
 require('chai').should()
 require('tap').mochaGlobals()
 
 describe('Session', function () {
   it('allows a token to be set and adds a prefix', function (done) {
+    var session = new Session()
+    session.end()
     return done()
   })
 
