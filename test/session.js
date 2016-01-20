@@ -54,4 +54,18 @@ describe('Session', function () {
       return done()
     })
   })
+
+  it('provides a method for generating a new token', function (done) {
+    var session = new Session()
+    session.generate({name: 'bcoe', email: 'ben@example.com'}, function (err, key) {
+      expect(err).to.equal(null)
+      session.get('user-' + key, function (err, user) {
+        expect(err).to.equal(null)
+        user.email.should.equal('ben@example.com')
+        user.name.should.equal('bcoe')
+        session.end()
+        return done()
+      })
+    })
+  })
 })

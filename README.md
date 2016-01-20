@@ -5,6 +5,26 @@
 
 Token based authentication, ideal for CI servers.
 
+## Usage
+
+Generate a token:
+
+```sh
+npm-auth-token generate
+```
+
+List your tokens:
+
+```sh
+npm-auth-token list
+```
+
+Delete a token:
+
+```sh
+npm-auth-token delete
+```
+
 ## License
 
 ISC
