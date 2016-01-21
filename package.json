@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "token based authentication strategy designed for CI systems.",
   "main": "index.js",
-  "bin": "./bin/npm-auth-token.js",
+  "bin": "./bin/npmo-auth-token.js",
   "scripts": {
     "pretest": "standard",
     "test": "tap --bail --timeout=2 --coverage ./test/*.js"
