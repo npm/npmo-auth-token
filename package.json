@@ -1,5 +1,5 @@
 {
-  "name": "@npmo/npmo-auth-token",
+  "name": "@npm/npmo-auth-token",
   "version": "1.0.0",
   "description": "token based authentication strategy designed for CI systems.",
   "main": "index.js",
