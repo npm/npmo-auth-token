@@ -68,4 +68,38 @@ describe('Session', function () {
       })
     })
   })
+
+  describe('allSessions', function () {
+    it('returns hash sessions', function (done) {
+      var session = new Session()
+      session.generate({name: 'bob-hash', email: 'ben@example.com'}, function () {})
+      session.allSessions(function (err, sessions) {
+        expect(err).to.equal(null)
+        expect(sessions.map(function (s) {
+          return s.name
+        })).to.include('bob-hash')
+
+        session.end()
+        return done()
+      })
+    })
+
+    it('handles a mix of hash and JSON sessions', function (done) {
+      var session = new Session()
+      session.generate({name: 'bob-hash', email: 'ben@example.com'}, function () {})
+      session.client.set('user-foo', JSON.stringify({name: 'bill-json', email: 'ben@example.com'}), function () {})
+      session.allSessions(function (err, sessions) {
+        expect(err).to.equal(null)
+        expect(sessions.map(function (s) {
+          return s.name
+        })).to.include('bill-json')
+        expect(sessions.map(function (s) {
+          return s.name
+        })).to.include('bob-hash')
+
+        session.end()
+        return done()
+      })
+    })
+  })
 })

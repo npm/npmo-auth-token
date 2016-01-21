@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-var eachLimit = require('async').eachLimit
 var chalk = require('chalk')
 var inquirer = require('inquirer')
 var Session = require('../').Session
@@ -35,7 +34,7 @@ require('yargs')
   })
   .command('list', 'list all user sessions that exist in npmo', function (yargs, argv) {
     var session = new Session()
-    getAllSessions(session.client, function (err, sessions) {
+    session.allSessions(function (err, sessions) {
       if (err) {
         console.log(chalk.red(err.message))
         return session.end()
@@ -61,7 +60,7 @@ require('yargs')
         session.end()
       })
     } else {
-      getAllSessions(session.client, function (err, sessions) {
+      session.allSessions(function (err, sessions) {
         if (err) {
           console.log(chalk.red(err.message))
           return session.end()
@@ -94,26 +93,3 @@ require('yargs')
   .help('h')
   .alias('h', 'help')
   .argv
-
-function getAllSessions (client, cb) {
-  var sessions = []
-
-  client.keys('user-*', function (err, keys) {
-    if (err) return cb(err)
-    eachLimit(keys, 4, function (key, done) {
-      var session = {
-        key: key
-      }
-      client.hgetall(key, function (err, res) {
-        if (err) return done(err)
-        session.email = res.email
-        session.name = res.name
-        sessions.push(session)
-        return done()
-      })
-    }, function (err) {
-      if (err) return cb(err)
-      return cb(null, sessions)
-    })
-  })
-}
