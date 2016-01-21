@@ -7,6 +7,10 @@ var Session = require('../').Session
 
 require('yargs')
   .usage('$0 <cmd> [options]')
+  .option('token', {
+    alias: 't',
+    describe: 'delete a specific token, rather than selecting from a list'
+  })
   .command('generate', 'generate a new deploy token', function (yargs, argv) {
     inquirer.prompt([
       {
@@ -50,33 +54,41 @@ require('yargs')
   })
   .command('delete', 'delete a token (you will be presented with a list)', function (yargs, argv) {
     var session = new Session()
-    getAllSessions(session.client, function (err, sessions) {
-      if (err) {
-        console.log(chalk.red(err.message))
-        return session.end()
-      }
+    if (argv.token) {
+      session.client.del('user-' + argv.token, function (err) {
+        if (err) console.log(chalk.red(err.message))
+        console.log('deleted:', chalk.green(argv.token))
+        session.end()
+      })
+    } else {
+      getAllSessions(session.client, function (err, sessions) {
+        if (err) {
+          console.log(chalk.red(err.message))
+          return session.end()
+        }
 
-      if (!sessions.length) {
-        console.log(chalk.green('no sessions exist'))
-        return session.end()
-      }
+        if (!sessions.length) {
+          console.log(chalk.green('no sessions exist'))
+          return session.end()
+        }
 
-      inquirer.prompt([{
-        type: 'list',
-        message: 'select the token you wish to delete',
-        name: 'delete',
-        choices: sessions.map(function (s) {
-          return s.key.replace('user-', '') + ' ' + s.name
-        })
-      }], function (answers) {
-        var token = 'user-' + answers.delete.split(' ')[0]
-        session.client.del(token, function (err) {
-          if (err) console.log(chalk.red(err.message))
-          console.log('deleted:', chalk.green(answers.delete))
-          session.end()
+        inquirer.prompt([{
+          type: 'list',
+          message: 'select the token you wish to delete',
+          name: 'delete',
+          choices: sessions.map(function (s) {
+            return s.key.replace('user-', '') + ' ' + s.name
+          })
+        }], function (answers) {
+          var token = 'user-' + answers.delete.split(' ')[0]
+          session.client.del(token, function (err) {
+            if (err) console.log(chalk.red(err.message))
+            console.log('deleted:', chalk.green(answers.delete))
+            session.end()
+          })
         })
       })
-    })
+    }
   })
   .demand(1, 'a command must be provided')
   .help('h')
