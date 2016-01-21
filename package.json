@@ -1,9 +1,11 @@
 {
   "name": "@npm/npmo-auth-token",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "token based authentication strategy designed for CI systems.",
   "main": "index.js",
-  "bin": "./bin/npmo-auth-token.js",
+  "bin": {
+    "npmo-auth-token": "./bin/npmo-auth-token.js"
+  },
   "scripts": {
     "pretest": "standard",
     "test": "tap --bail --timeout=2 --coverage ./test/*.js"
