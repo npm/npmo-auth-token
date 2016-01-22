@@ -7,7 +7,7 @@ require('chai').should()
 require('tap').mochaGlobals()
 
 describe('Authorizer', function () {
-  var token = 'abc123'
+  var token = 'deploy_abc123'
   var tokenWithPrefix = 'user-' + token
 
   it('returns a 404 if an invalid credentials object is provided', function () {
@@ -15,6 +15,19 @@ describe('Authorizer', function () {
     authorizer.authorize({}, function (err) {
       err.statusCode.should.equal(404)
       authorizer.end()
+    })
+  })
+
+  it('returns a 401 unauthorized if token is not a deploy token', function (done) {
+    var authorizer = new Authorizer()
+    authorizer.authorize({
+      headers: {
+        authorization: 'Bearer xyz'
+      }
+    }, function (err, session) {
+      expect(err.statusCode).to.equal(401)
+      authorizer.end()
+      return done()
     })
   })
 
