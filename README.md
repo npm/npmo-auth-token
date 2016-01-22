@@ -10,19 +10,19 @@ Token based authentication, ideal for CI servers.
 Generate a token:
 
 ```sh
-npm-auth-token generate
+npmo-auth-token generate
 ```
 
 List your tokens:
 
 ```sh
-npm-auth-token list
+npmo-auth-token list
 ```
 
 Delete a token:
 
 ```sh
-npm-auth-token delete
+npmo-auth-token delete
 ```
 
 ## License
