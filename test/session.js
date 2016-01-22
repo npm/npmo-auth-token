@@ -1,10 +1,20 @@
 /* global describe it */
 
 var Session = require('../lib/session')
-var expect = require('chai').expect
+var chai = require('chai')
+var expect = chai.expect
+var tap = require('tap')
 
-require('chai').should()
-require('tap').mochaGlobals()
+chai.should()
+tap.mochaGlobals()
+
+tap.tearDown(function () {
+  var session = new Session()
+  session.client.flushdb(function (err) {
+    if (err) console.error('could not flush redis on test tearDown', err)
+    session.end()
+  })
+})
 
 describe('Session', function () {
   var prefixedKey = 'user-abc123'

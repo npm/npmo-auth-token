@@ -4,13 +4,48 @@ var chalk = require('chalk')
 var inquirer = require('inquirer')
 var Session = require('../').Session
 
+function generateToken (userInfo) {
+  var session = new Session()
+  session.generate(userInfo, function (err, token) {
+    if (err) {
+      console.log(chalk.red(err.message))
+    } else {
+      console.log('generated token:', chalk.green(token))
+    }
+    session.end()
+  })
+}
+
+function deleteToken (session, tokenString) {
+  var token = 'user-' + tokenString.split(' ')[0]
+  session.client.del(token, function (err) {
+    if (err) console.log(chalk.red(err.message))
+    else console.log('deleted:', chalk.green(tokenString))
+    session.end()
+  })
+}
+
 require('yargs')
   .usage('$0 <cmd> [options]')
-  .option('token', {
-    alias: 't',
-    describe: 'delete a specific token, rather than selecting from a list'
+  .option('u', {
+    alias: 'user',
+    describe: 'Generate a token with this npm username, rather than answering a prompt',
+    type: 'string'
   })
-  .command('generate', 'generate a new deploy token', function (yargs, argv) {
+  .option('e', {
+    alias: 'email',
+    describe: 'Generate a token with this email address, rather than answering a prompt',
+    type: 'string'
+  })
+  .option('t', {
+    alias: 'token',
+    describe: 'Delete a specific token, rather than selecting from a list',
+    type: 'string'
+  })
+  .command('generate', 'Generate a new deploy token (you will be prompted for username and email)', function (yargs, argv) {
+    if (argv.user && argv.email) {
+      return generateToken({ name: argv.user, email: argv.email })
+    }
     inquirer.prompt([
       {
         name: 'name',
@@ -20,19 +55,9 @@ require('yargs')
         name: 'email',
         message: 'email address'
       }
-    ], function (answers) {
-      var session = new Session()
-      session.generate(answers, function (err, token) {
-        if (err) {
-          console.log(chalk.red(err.message))
-        } else {
-          console.log('generated token:', chalk.green(token))
-        }
-        session.end()
-      })
-    })
+    ], generateToken)
   })
-  .command('list', 'list all user sessions that exist in npmo', function (yargs, argv) {
+  .command('list', 'List all user sessions that exist in npmo', function (yargs, argv) {
     var session = new Session()
     session.allSessions(function (err, sessions) {
       if (err) {
@@ -51,14 +76,10 @@ require('yargs')
       session.end()
     })
   })
-  .command('delete', 'delete a token (you will be presented with a list)', function (yargs, argv) {
+  .command('delete', 'Delete a token (you will be presented with a list)', function (yargs, argv) {
     var session = new Session()
     if (argv.token) {
-      session.client.del('user-' + argv.token, function (err) {
-        if (err) console.log(chalk.red(err.message))
-        console.log('deleted:', chalk.green(argv.token))
-        session.end()
-      })
+      return deleteToken(session, argv.token)
     } else {
       session.allSessions(function (err, sessions) {
         if (err) {
@@ -79,17 +100,13 @@ require('yargs')
             return s.key.replace('user-', '') + ' ' + s.name
           })
         }], function (answers) {
-          var token = 'user-' + answers.delete.split(' ')[0]
-          session.client.del(token, function (err) {
-            if (err) console.log(chalk.red(err.message))
-            console.log('deleted:', chalk.green(answers.delete))
-            session.end()
-          })
+          return deleteToken(session, answers.delete)
         })
       })
     }
   })
-  .demand(1, 'a command must be provided')
+  .demand(1, chalk.red('a command must be provided'))
   .help('h')
   .alias('h', 'help')
+  .wrap(96)
   .argv
