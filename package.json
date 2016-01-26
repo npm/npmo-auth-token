@@ -1,6 +1,6 @@
 {
   "name": "@npm/npmo-auth-token",
-  "version": "1.2.0-alpha",
+  "version": "1.2.0",
   "description": "token based authentication strategy designed for CI systems.",
   "main": "index.js",
   "bin": {
