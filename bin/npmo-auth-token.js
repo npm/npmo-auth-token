@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var chalk = require('chalk')
-var inquirer = require('@bcoe/inquirer')
+var inquirer = require('inquirer')
 var Session = require('../').Session
 
 function generateToken (userInfo) {
