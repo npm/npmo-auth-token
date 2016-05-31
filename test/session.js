@@ -58,7 +58,7 @@ describe('Session', function () {
 
   it('returns a 500 error if something really strange happens', function (done) {
     var session = new Session()
-    session.client.end()
+    session.client.end(true)
     session.get('pork-chop-sandwiches', function (err, obj) {
       err.statusCode.should.equal(500)
       return done()
