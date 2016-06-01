@@ -8,7 +8,8 @@
   },
   "scripts": {
     "pretest": "standard",
-    "test": "tap --bail --timeout=2 --coverage ./test/*.js"
+    "test": "tap --bail --timeout=2 --coverage ./test/*.js",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "standard": "^5.4.1",
+    "standard-version": "^2.2.1",
     "tap": "^5.0.1"
   },
   "dependencies": {
